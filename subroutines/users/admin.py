@@ -8,6 +8,16 @@ User = get_user_model()
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
-    fieldsets = (("User", {"fields": ("name",)}),) + auth_admin.UserAdmin.fieldsets
-    list_display = ["username", "name", "is_superuser"]
-    search_fields = ["name"]
+    fieldsets = (
+        ("User", {"fields": ("is_verified",)}),
+    ) + auth_admin.UserAdmin.fieldsets
+    list_display = [
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "is_verified",
+        "is_active",
+        "is_superuser",
+    ]
+    search_fields = ["username", "email"]
