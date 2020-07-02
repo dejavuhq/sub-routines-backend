@@ -3,6 +3,7 @@
 from rest_framework import serializers
 from subroutines.users.models import Profile
 
+
 class ProfileModelSerializer(serializers.ModelSerializer):
     """Profile model serializer."""
 
@@ -10,7 +11,4 @@ class ProfileModelSerializer(serializers.ModelSerializer):
         """Meta class."""
 
         model = Profile
-        fields = (
-            'picture',
-            'biography',
-        )
+        fields = ("picture", "biography", "is_public")
