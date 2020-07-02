@@ -2,7 +2,6 @@ from django.conf import settings
 from django.urls import include, path
 
 from rest_framework.routers import DefaultRouter, SimpleRouter
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from subroutines.users.views import UserViewSet
 from subroutines.habits.views import HabitViewSet
