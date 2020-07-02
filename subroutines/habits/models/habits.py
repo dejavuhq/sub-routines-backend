@@ -9,8 +9,10 @@ class Habit(SubRoutinesModel):
     """
     name = models.CharField('name', max_length=50)
     description = models.CharField('description', max_length=200)
-    completed = models.BooleanField(default=False)
-    paused = models.BooleanField(default=False)
+    is_completed = models.BooleanField(default=False)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    is_paused = models.BooleanField(default=False)
     is_public = models.BooleanField(default=False)
     recurrence = models.CharField('recurrence', max_length=200)
 
