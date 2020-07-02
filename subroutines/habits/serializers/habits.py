@@ -10,5 +10,7 @@ class HabitSerializer(serializers.ModelSerializer):
 
         model = Habit
         fields = ('id', 'name', 'description', 
-            'recurrence', 'is_public'
+            'recurrence', 'is_public',
+            'is_completed', 'is_paused',
+            'start_date', 'end_date'
         )

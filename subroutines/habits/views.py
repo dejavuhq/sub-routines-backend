@@ -14,7 +14,6 @@ from subroutines.habits.models import Habit
 
 User = get_user_model()
 
-
 class HabitViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, GenericViewSet):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
@@ -22,7 +21,7 @@ class HabitViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateM
 
     def get_permissions(self):
         """Assign permissions based on actions."""
-        if self.action in ["list", "update", "partial_update", "profile"]:
+        if self.action in ["list", "update", "partial_update"]:
             permissions = [IsAuthenticated]
         else:
             permissions = [IsAuthenticated]
