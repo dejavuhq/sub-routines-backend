@@ -7,7 +7,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from subroutines.users.serializers import UserSerializer, UserSignUpSerializer, UserLoginSerializer
+from subroutines.users.serializers import (
+    UserSerializer,
+    UserSignUpSerializer,
+    UserLoginSerializer,
+    ProfileModelSerializer,
+)
+
 
 User = get_user_model()
 
@@ -44,8 +50,17 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
-        data = {
-            "user": UserSerializer(user).data,
-            "token": str(token.access_token)
-        }
-        return Response(data, status=status.HTTP_200_OK) 
+        data = {"user": UserSerializer(user).data, "token": str(token.access_token)}
+        return Response(data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=["put", "patch"])
+    def profile(self, request, *args, **kwargs):
+        """Update profile data."""
+        user = self.get_object()
+        profile = user.profile
+        partial = request.method == "PATCH"
+        serializer = ProfileModelSerializer(profile, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = UserSerializer(user).data
+        return Response(data)
