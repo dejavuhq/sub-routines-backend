@@ -7,10 +7,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
+from subroutines.users.serializers.profiles import ProfileModelSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     """User model serializer."""
 
+    profile = ProfileModelSerializer(read_only=True)
     class Meta:
         model = User
         fields = [
@@ -19,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "is_verified",
+            "profile"
         ]
 
 
