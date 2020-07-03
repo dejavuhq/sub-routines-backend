@@ -65,12 +65,11 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "django_celery_beat",
     "rest_framework",
-    "rest_framework.authtoken",
 ]
 
 LOCAL_APPS = [
     "subroutines.users.apps.UsersConfig",
-    "subroutines.habits"
+    "subroutines.habits.apps.HabitsConfig
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

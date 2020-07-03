@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from subroutines.utils.models import SubRoutinesModel
 
@@ -10,7 +11,7 @@ class Habit(SubRoutinesModel):
     name = models.CharField('name', max_length=50)
     description = models.CharField('description', max_length=200)
     is_completed = models.BooleanField(default=False)
-    start_date = models.DateField()
+    start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(blank=True, null=True)
     is_paused = models.BooleanField(default=False)
     is_public = models.BooleanField(default=False)
