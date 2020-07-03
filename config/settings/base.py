@@ -65,7 +65,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "django_celery_beat",
     "rest_framework",
-    "rest_framework.authtoken",
 ]
 
 LOCAL_APPS = [
