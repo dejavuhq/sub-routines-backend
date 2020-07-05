@@ -10,7 +10,6 @@ from subroutines.users.serializers import (
     UserSerializer,
     UserSignUpSerializer,
     UserLoginSerializer,
-    ProfileModelSerializer,
     AccountVerificationSerializer
 )
 
@@ -25,7 +24,7 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         """Assign permissions based on actions."""
         if self.action in ["signup", "login", "verify"]:
             permissions = [AllowAny]
-        elif self.action in ["retrieve", "update", "partial_update", "profile"]:
+        elif self.action in ["retrieve", "update", "partial_update"]:
             permissions = [IsAuthenticated]
         else:
             permissions = [IsAuthenticated]
@@ -50,18 +49,6 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         user, token = serializer.save()
         data = {"user": UserSerializer(user).data, "token": str(token.access_token)}
         return Response(data, status=status.HTTP_200_OK)
-
-    @action(detail=True, methods=["put", "patch"])
-    def profile(self, request, *args, **kwargs):
-        """Update profile data."""
-        user = self.get_object()
-        profile = user.profile
-        partial = request.method == "PATCH"
-        serializer = ProfileModelSerializer(profile, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        data = UserSerializer(user).data
-        return Response(data)
 
     @action(detail=False, methods=["POST"])
     def verify(self, request):

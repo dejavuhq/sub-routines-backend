@@ -4,4 +4,3 @@ from .users import (
     UserLoginSerializer,
     AccountVerificationSerializer,
 )
-from .profiles import ProfileModelSerializer
