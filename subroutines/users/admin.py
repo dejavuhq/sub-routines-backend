@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 
-from subroutines.users.models import Profile, User
+from subroutines.users.models import  User
 
 
 User = get_user_model()
@@ -19,22 +19,10 @@ class UserAdmin(auth_admin.UserAdmin):
         "last_name",
         "is_verified",
         "is_active",
+        "is_public",
         "is_superuser",
     ]
     search_fields = ["username", "email"]
-
-
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    """Profile model admin"""
-
-    list_display = ["biography"]
-    search_fields = [
-        "user__username",
-        "user__email",
-        "user__first_name",
-        "user__last_name",
-    ]
 
 
 admin.site.register(User, UserAdmin)

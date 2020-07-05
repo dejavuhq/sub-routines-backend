@@ -7,9 +7,6 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken
 
-
-from subroutines.users.models.profiles import Profile
-from subroutines.users.serializers.profiles import ProfileModelSerializer
 from subroutines.users.utils import send_verification_email
 
 
@@ -19,8 +16,6 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     """User model serializer."""
 
-    profile = ProfileModelSerializer(read_only=True)
-
     class Meta:
         model = User
         fields = [
@@ -28,8 +23,10 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
+            "biography",
+            "picture",
             "is_verified",
-            "profile",
+            "is_public",
         ]
 
 
@@ -65,7 +62,6 @@ class UserSignUpSerializer(serializers.Serializer):
         """Handle user and profile creation."""
         data.pop("password_confirmation")
         user = User.objects.create_user(**data, is_verified=False)
-        Profile.objects.create(user=user)
         send_verification_email(user)
         return user
 
