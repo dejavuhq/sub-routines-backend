@@ -1,5 +1,3 @@
-from django.contrib.auth import get_user_model
-
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin
@@ -7,15 +5,15 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from subroutines.users.models import User
 from subroutines.users.serializers import (
     UserSerializer,
     UserSignUpSerializer,
     UserLoginSerializer,
     ProfileModelSerializer,
+    AccountVerificationSerializer
 )
 
-
-User = get_user_model()
 
 
 class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
@@ -25,7 +23,7 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 
     def get_permissions(self):
         """Assign permissions based on actions."""
-        if self.action in ["signup", "login"]:
+        if self.action in ["signup", "login", "verify"]:
             permissions = [AllowAny]
         elif self.action in ["retrieve", "update", "partial_update", "profile"]:
             permissions = [IsAuthenticated]
@@ -64,3 +62,12 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         serializer.save()
         data = UserSerializer(user).data
         return Response(data)
+
+    @action(detail=False, methods=["POST"])
+    def verify(self, request):
+        """Account verification."""
+        serializer = AccountVerificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = {'message': 'Congratulations! Start making habits.'}
+        return Response(data, status=status.HTTP_200_OK)

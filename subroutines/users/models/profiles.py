@@ -18,7 +18,7 @@ class Profile(SubRoutinesModel):
     picture = models.ImageField(
         "profile picture", upload_to="users/pictures/", blank=True, null=True
     )
-    biography = models.TextField(max_length=500, blank=True)
+    biography = models.TextField(max_length=500, null=True)
     is_public = models.BooleanField(
         default=True, help_text=_("Public profiles show all information about users.")
     )

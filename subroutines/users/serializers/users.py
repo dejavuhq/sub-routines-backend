@@ -1,11 +1,16 @@
+import jwt
+
+from django.conf import settings
 from django.contrib.auth import get_user_model, password_validation, authenticate
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 from subroutines.users.models.profiles import Profile
 from subroutines.users.serializers.profiles import ProfileModelSerializer
+from subroutines.users.utils import send_verification_email
 
 
 User = get_user_model()
@@ -61,6 +66,7 @@ class UserSignUpSerializer(serializers.Serializer):
         data.pop("password_confirmation")
         user = User.objects.create_user(**data, is_verified=False)
         Profile.objects.create(user=user)
+        send_verification_email(user)
         return user
 
 
@@ -84,3 +90,31 @@ class UserLoginSerializer(serializers.Serializer):
         """Generate token."""
         token = RefreshToken.for_user(user=self.context["user"])
         return self.context["user"], token
+
+
+class AccountVerificationSerializer(serializers.Serializer):
+    """Account verification serializer."""
+
+    token = serializers.CharField()
+
+    def validate_token(self, data):
+        """Verify if a token is valid."""
+
+        try:
+            payload = jwt.decode(data, settings.SECRET_KEY, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise serializers.ValidationError("Verification link has expired.")
+        except jwt.PyJWTError:
+            raise serializers.ValidationError("Invalid token")
+        if payload["type"] != "account_verification":
+            raise serializers.ValidationError("Invalid token")
+
+        self.context["payload"] = payload
+        return data
+
+    def save(self):
+        """Update user's verified status."""
+        payload = self.context["payload"]
+        user = User.objects.get(username=payload["user"])
+        user.is_verified = True
+        user.save()
