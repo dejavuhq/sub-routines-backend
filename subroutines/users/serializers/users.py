@@ -25,8 +25,8 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "biography",
             "picture",
-            "is_verified",
             "is_public",
+            "created_at"
         ]
 
 
@@ -78,6 +78,8 @@ class UserLoginSerializer(serializers.Serializer):
 
         if not user:
             raise serializers.ValidationError("Invalid credentials")
+        if not user.is_verified:
+            raise serializers.ValidationError("Your account is not verified yet.")
 
         self.context["user"] = user
         return data
