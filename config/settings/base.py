@@ -65,6 +65,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "corsheaders",
     "django_celery_beat",
+    "recurrence",
     "rest_framework",
 ]
 

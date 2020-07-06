@@ -7,12 +7,12 @@ from subroutines.habits.models import Habit
 class UserAdmin(admin.ModelAdmin):
     list_display = [
         "name",
-        "is_completed",
         "start_date",
         "end_date",
+        "recurrence",
+        "is_completed",
         "is_paused",
         "is_public",
-        "recurrence",
     ]
 
     search_fields = ["name", "is_completed"]
