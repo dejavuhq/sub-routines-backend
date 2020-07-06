@@ -7,6 +7,18 @@ from recurrence import fields
 from subroutines.utils.models import SubRoutinesModel
 
 
+class HabitManager(models.Manager):
+    """Habit Manager with utilities to create stats"""
+
+    def get_total_active_habits(self, user):
+        """Returns the total of no paused habits for a user."""
+        return self.filter(is_paused=False).count()
+
+    def get_active_habits(self):
+        """Returns a list of all active habits for a user."""
+        return self.filter(is_paused=False)
+
+
 class Habit(SubRoutinesModel):
     """
     Habit model for subroutines app. Extend from django abstract model
@@ -23,4 +35,7 @@ class Habit(SubRoutinesModel):
     recurrence = fields.RecurrenceField()
 
     user = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
+
+    # Uses a custom manager
+    objects = HabitManager()
 
