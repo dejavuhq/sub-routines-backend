@@ -71,7 +71,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "subroutines.users.apps.UsersConfig",
-    "subroutines.habits.apps.HabitsConfig"
+    "subroutines.habits.apps.HabitsConfig",
+    "subroutines.stats.apps.StatsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

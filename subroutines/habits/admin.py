@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from subroutines.habits.models import Habit
+from subroutines.habits.models import Habit, Instance
 
 
 @admin.register(Habit)
@@ -17,3 +17,8 @@ class UserAdmin(admin.ModelAdmin):
 
     search_fields = ["name", "is_completed"]
 
+
+@admin.register(Instance)
+class InstanceAdmin(admin.ModelAdmin):
+    list_display = ["date_to_do", "is_done", "habit", "user"]
+    ordering = ["date_to_do"]
