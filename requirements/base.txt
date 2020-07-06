@@ -16,6 +16,8 @@ django==3.0.7  # pyup: < 3.1  # https://www.djangoproject.com/
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
 django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
 django-redis==4.12.1  # https://github.com/jazzband/django-redis
+django-recurrence==1.10.3  # https://github.com/django-recurrence/django-recurrence
+
 # Django REST Framework
 djangorestframework==3.11.0  # https://github.com/encode/django-rest-framework
 djangorestframework-simplejwt==4.4.0 # https://github.com/SimpleJWT/django-rest-framework-simplejwt
