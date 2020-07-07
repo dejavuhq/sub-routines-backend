@@ -1,9 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.urls import reverse
+from django.contrib.auth.models import UserManager as BaseUserManager
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from subroutines.utils.models import SubRoutinesModel
+
+
+class UserManager(BaseUserManager):
+    """Extends user manager to add helper functions."""
+
+    def get_users_with_instances(self):
+        """Returns just users with habit instances to do today."""
+        today = timezone.datetime.today()
+        return self.filter(instance__date_to_do=today)
 
 
 class User(SubRoutinesModel, AbstractUser):
