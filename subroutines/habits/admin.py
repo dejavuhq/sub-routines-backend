@@ -13,6 +13,7 @@ class UserAdmin(admin.ModelAdmin):
         "is_completed",
         "is_paused",
         "is_public",
+        "completion_rate",
     ]
 
     search_fields = ["name", "is_completed"]

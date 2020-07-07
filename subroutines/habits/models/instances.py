@@ -27,10 +27,13 @@ class InstanceManager(models.Manager):
             "total_done": query.filter(is_done=True).count(),
         }
 
-    def get_for_today(self):
-        """Returns a list of habit instances to do today."""
+    def get_for_today(self, user):
+        """
+        Returns a list of habit instances that a user must to do today
+        excluding instances of habits paused.
+        """
         today = timezone.datetime.today()
-        return self.filter(date_to_do=today)
+        return self.filter(user=user, date_to_do=today, habit__is_paused=False)
 
 
 class Instance(models.Model):
@@ -46,4 +49,7 @@ class Instance(models.Model):
     user = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
 
     objects = InstanceManager()
+
+    def __str__(self):
+        return self.habit.name
 
