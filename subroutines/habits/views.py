@@ -1,34 +1,24 @@
 from django.contrib.auth import get_user_model
 
+from rest_framework import mixins
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.mixins import (
-    ListModelMixin,
-    RetrieveModelMixin,
-    UpdateModelMixin,
-    CreateModelMixin,
-)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from subroutines.users.serializers import (
-    UserSerializer,
-    UserSignUpSerializer,
-    UserLoginSerializer,
-)
-from subroutines.habits.serializers import HabitSerializer
-
 from subroutines.habits.models import Habit
+from subroutines.habits.serializers import HabitSerializer
+from subroutines.habits.tasks import create_habit_instances
 
 User = get_user_model()
 
 
 class HabitViewSet(
-    ListModelMixin,
-    RetrieveModelMixin,
-    CreateModelMixin,
-    UpdateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     GenericViewSet,
 ):
     serializer_class = HabitSerializer
@@ -44,7 +34,8 @@ class HabitViewSet(
         return [permission() for permission in permissions]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        habit = serializer.save(user=self.request.user)
+        create_habit_instances.apply_async([habit.pk], countdown=10)
 
     def get_queryset(self):
         """Restrict list to user authenticated."""

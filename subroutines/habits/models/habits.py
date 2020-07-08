@@ -1,5 +1,6 @@
+from datetime import date
+
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from recurrence import fields
@@ -27,7 +28,7 @@ class Habit(SubRoutinesModel):
 
     name = models.CharField(_("name"), max_length=50)
     description = models.CharField(_("description"), max_length=200)
-    start_date = models.DateField(_("start date"), default=timezone.now)
+    start_date = models.DateField(_("start date"), default=date.today)
     end_date = models.DateField(_("end date"), blank=True, null=True)
     is_completed = models.BooleanField(_("completed"), default=False)
     is_paused = models.BooleanField(_("paused"), default=False)

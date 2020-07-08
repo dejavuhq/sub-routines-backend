@@ -4,7 +4,7 @@ from subroutines.habits.models import Habit, Instance
 
 
 @admin.register(Habit)
-class UserAdmin(admin.ModelAdmin):
+class HabitAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "start_date",
@@ -13,10 +13,9 @@ class UserAdmin(admin.ModelAdmin):
         "is_completed",
         "is_paused",
         "is_public",
-        "completion_rate",
     ]
-
     search_fields = ["name", "is_completed"]
+    readonly_fields = ["total_instances", "total_instances_done", "completion_rate"]
 
 
 @admin.register(Instance)
