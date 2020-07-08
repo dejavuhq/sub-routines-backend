@@ -8,7 +8,7 @@ def create_periodic_task(apps, schema_editor):
 
     # Create schedule to run periodic task daily at 00:30
     schedule, _ = CrontabSchedule.objects.get_or_create(
-        minute="25",
+        minute="5",
         hour="0",
         day_of_week="*",
         day_of_month="*",
