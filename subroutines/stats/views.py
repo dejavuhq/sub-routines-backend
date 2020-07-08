@@ -1,27 +1,18 @@
-from django.contrib.auth import get_user_model
-from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.mixins import ListModelMixin
-from rest_framework.viewsets import GenericViewSet
+from rest_framework import mixins
+from rest_framework import viewsets
 
 from subroutines.stats.serializers import StatSerializer
 from subroutines.stats.models import Stat
 
-User = get_user_model()
 
-class StatViewSet(ListModelMixin, GenericViewSet):
-    serializer_class = StatSerializer
+class StatViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Stat.objects.all()
+    serializer_class = StatSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
 
-    def get_permissions(self):
-        """Assign permissions based on actions."""
-        if self.action in ["retrieve", "list"]:
-            permissions = [IsAuthenticated]
-        else:
-            permissions = [IsAuthenticated]
-        return [permission() for permission in permissions]
-    
     def get_queryset(self):
-        """ List user statistics """
+        """Limit queryset to user logged in."""
         user = self.request.user
         return Stat.objects.filter(user=user)

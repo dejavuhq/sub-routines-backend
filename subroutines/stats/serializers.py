@@ -5,9 +5,10 @@ from subroutines.stats.models import Stat
 
 User = get_user_model()
 
+
 class StatSerializer(serializers.ModelSerializer):
-    """Serializer model serializer."""
-    
+    """Stat model serializer."""
+
     class Meta:
         model = Stat
         fields = [
@@ -17,5 +18,4 @@ class StatSerializer(serializers.ModelSerializer):
             "total_habits_done_today",
             "completion_rate",
             "completion_streak",
-            "user",
         ]
