@@ -1,5 +1,3 @@
-from django.db.models import F
-
 from config import celery_app
 from subroutines.habits.models import Habit, Instance
 
