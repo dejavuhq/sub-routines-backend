@@ -23,5 +23,8 @@ class HabitSerializer(serializers.ModelSerializer):
             "is_paused",
             "start_date",
             "end_date",
+            "total_instances",
+            "total_instances_done",
+            "completion_rate",
         )
 
