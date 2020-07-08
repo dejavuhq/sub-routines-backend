@@ -6,13 +6,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from subroutines.users.models import User
+from subroutines.stats.models import Stat
+from subroutines.stats.serializers import StatSerializer
 from subroutines.users.serializers import (
     UserSerializer,
     UserSignUpSerializer,
     UserLoginSerializer,
-    AccountVerificationSerializer
+    AccountVerificationSerializer,
 )
-
 
 
 class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
@@ -47,7 +48,13 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
-        data = {"user": UserSerializer(user).data, "token": str(token.access_token)}
+
+        stats = Stat.objects.filter(user=user)
+        data = {
+            "user": UserSerializer(user).data,
+            "stats": StatSerializer(stats, many=True).data,
+            "token": str(token.access_token),
+        }
         return Response(data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["POST"])
@@ -56,5 +63,6 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         serializer = AccountVerificationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        data = {'message': 'Congratulations! Start making habits.'}
+        data = {"message": "Congratulations! Start making habits."}
         return Response(data, status=status.HTTP_200_OK)
+
