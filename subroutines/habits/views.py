@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.decorators import action
+from django.utils import timezone
 from rest_framework.mixins import (
     ListModelMixin,
     RetrieveModelMixin,
@@ -19,7 +20,7 @@ from subroutines.users.serializers import (
 )
 from subroutines.habits.serializers import HabitSerializer
 
-from subroutines.habits.models import Habit
+from subroutines.habits.models import Habit, Instance
 
 User = get_user_model()
 
@@ -56,3 +57,19 @@ class HabitViewSet(
         queryset = Habit.objects.filter(user=user, pk=pk)
         serializer = HabitSerializer(queryset)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True)
+    def check(self, request, id):
+        user = self.request.user
+        habit = Habit.objects.get(user=user, id=id)
+
+        habit_instance = Instance(
+            user = user,
+            habit = habit,
+            date_to_do = timezone.datetime.today(),
+            is_done = True
+        )
+
+        habit_instance.save()
+
+        return Response("Instance created", status=status.HTTP_200_OK)
