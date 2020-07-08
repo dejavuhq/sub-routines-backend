@@ -15,10 +15,16 @@ class HabitAdmin(admin.ModelAdmin):
         "is_public",
     ]
     search_fields = ["name", "is_completed"]
-    readonly_fields = ["total_instances", "total_instances_done", "completion_rate"]
+    readonly_fields = [
+        "user",
+        "total_instances",
+        "total_instances_done",
+        "completion_rate",
+    ]
 
 
 @admin.register(Instance)
 class InstanceAdmin(admin.ModelAdmin):
     list_display = ["date_to_do", "is_done", "habit", "user"]
+    readonly_fields = ["user", "habit", "date_to_do"]
     ordering = ["date_to_do"]
