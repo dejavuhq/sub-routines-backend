@@ -45,6 +45,8 @@ class User(SubRoutinesModel, AbstractUser):
 
     REQUIRED_FIELDS = ["email", "first_name", "last_name"]
 
+    objects = UserManager()
+
     def __str__(self):
         """Return username"""
         return self.username
