@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -15,13 +17,13 @@ class InstanceManager(models.Manager):
             "total_done": query.filter(is_done=True).count(),
         }
 
-    def get_stats_per_user_for_today(self, user):
+    def get_stats_per_user(self, user):
         """
         Returns both the total of habit instances a user should have
-        be done today and total of instances done.
+        been done yesterday and total of instances done.
         """
-        today = timezone.datetime.today()
-        query = self.filter(user=user, date_to_do=today)
+        today = timezone.datetime.today() - timedelta(days=1)
+        query = self.filter(user=user, date_to_do=yesterday)
         return {
             "total": query.count(),
             "total_done": query.filter(is_done=True).count(),

@@ -1,5 +1,7 @@
-from django.contrib.auth import get_user_model
+from datetime import timedelta
 
+from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from config import celery_app
 from subroutines.habits.models import Habit, Instance
@@ -18,12 +20,16 @@ def update_user_stats():
 
     for user in users:
         # Get total habit instances today and total habit instances done today
-        user_stats = Instance.objects.get_stats_per_user_for_today(user=user)
+        user_stats = Instance.objects.get_stats_per_user(user=user)
         # Completion rate total done / total
-        completion_rate = user_stats["total_done"] / user_stats["total"]
+        try:
+            completion_rate = user_stats["total_done"] / user_stats["total"]
+        except ZeroDivisionError:
+            completion_rate = 0
 
         # create stats
         stat = Stat.objects.create(
+            date=timezone.datetime.today() - timedelta(days=1),
             total_habits=Habit.objects.get_total_active_habits_for_user(user=user),
             total_habits_today=user_stats["total"],
             total_habits_done_today=user_stats["total_done"],
