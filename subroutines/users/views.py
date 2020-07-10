@@ -1,13 +1,11 @@
+from rest_framework import mixins
 from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
 from subroutines.users.models import User
-from subroutines.stats.models import Stat
-from subroutines.stats.serializers import StatSerializer
 from subroutines.users.serializers import (
     UserSerializer,
     UserSignUpSerializer,
@@ -16,7 +14,9 @@ from subroutines.users.serializers import (
 )
 
 
-class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class UserViewSet(
+    mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+):
     serializer_class = UserSerializer
     queryset = User.objects.filter(is_active=True)
     lookup_field = "username"
@@ -49,10 +49,8 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
 
-        stats = Stat.objects.filter(user=user)
         data = {
             "user": UserSerializer(user).data,
-            "stats": StatSerializer(stats, many=True).data,
             "token": str(token.access_token),
         }
         return Response(data, status=status.HTTP_200_OK)

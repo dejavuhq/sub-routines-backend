@@ -36,3 +36,25 @@ def create_habit_instances(habit_pk):
             is_done=False,
         )
 
+
+@celery_app.task()
+def update_habit_stats(habit_pk):
+    """
+    Task to update habit stats each time a habit instance is updated.
+    """
+    # Habit stats
+    habit = Habit.objects.get(pk=habit_pk)
+    habit_stats = Instance.objects.get_stats_per_habit_until_today(habit=habit)
+
+    try:
+        completion_rate = habit_stats["total_done"] / habit_stats["total"]
+    except ZeroDivisionError:
+        completion_rate = 0
+
+    habit.total_instances = habit_stats["total"]
+    habit.total_instances_done = habit_stats["total_done"]
+    habit.completion_rate = completion_rate
+
+    habit.save(
+        update_fields=["total_instances", "total_instances_done", "completion_rate"]
+    )
