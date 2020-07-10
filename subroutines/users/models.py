@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as BaseUserManager
@@ -11,9 +13,12 @@ class UserManager(BaseUserManager):
     """Extends user manager to add helper functions."""
 
     def get_users_with_instances(self):
-        """Returns just users with habit instances to do today."""
-        today = timezone.datetime.today()
-        return self.filter(instance__date_to_do=today)
+        """
+        Returns just users with habit instances that
+        should be done yesterday.
+        """
+        yesterday = timezone.datetime.today() - timedelta(days=1)
+        return self.filter(instance__date_to_do=yesterday)
 
 
 class User(SubRoutinesModel, AbstractUser):
