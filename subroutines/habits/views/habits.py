@@ -39,3 +39,14 @@ class HabitViewSet(
     def perform_create(self, serializer):
         habit = serializer.save(user=self.request.user)
         create_habit_instances.apply_async([habit.pk], countdown=10)
+
+    def retrieve(self, request, *args, **kwargs):
+        """Add extra data to the response."""
+        response = super(HabitViewSet, self).retrieve(request, *args, **kwargs)
+        instances = Instance.objects.filter(habit=self.get_object())
+        data = {
+            "habit": response.data,
+            "instances": InstanceSerializer(instances, many=True).data,
+        }
+        response.data = data
+        return response

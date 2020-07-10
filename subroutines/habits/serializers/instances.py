@@ -15,3 +15,4 @@ class InstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instance
         fields = ["id", "habit", "date_to_do", "is_done"]
+
