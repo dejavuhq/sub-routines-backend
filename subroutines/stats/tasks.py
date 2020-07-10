@@ -10,12 +10,10 @@ User = get_user_model()
 
 
 @celery_app.task()
-def create_user_stats():
-    """
-    Function to daily generate stats according habits
-    instances done per user.
-    """
+def update_user_stats():
+    """Task to update user stats daily"""
 
+    # User stats
     users = User.objects.get_users_with_instances()
 
     for user in users:

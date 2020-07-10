@@ -19,8 +19,8 @@ def create_periodic_task(apps, schema_editor):
     # Create periodic task
     PeriodicTask.objects.create(
         crontab=schedule,
-        name="Create user stats",
-        task="subroutines.stats.tasks.create_user_stats",
+        name="Update user stats",
+        task="subroutines.stats.tasks.update_user_stats",
     )
 
 
