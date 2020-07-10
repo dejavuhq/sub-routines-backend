@@ -211,6 +211,7 @@ ADMINS = [
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
+ACCOUNT_VERIFICATION_URL = env("ACCOUNT_VERIFICATION_URL", default="")
 
 # LOGGING
 # ------------------------------------------------------------------------------
