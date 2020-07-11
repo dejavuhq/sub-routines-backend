@@ -8,10 +8,9 @@ from django.utils.translation import ugettext_lazy as _
 class InstanceManager(models.Manager):
     """Instance Manager."""
 
-    def get_stats_per_habit_until_today(self, habit):
+    def get_stats_per_habit(self, habit, date):
         """Returns the total of instances both done and don't per habit."""
-        today = timezone.datetime.today()
-        query = self.filter(habit=habit, date_to_do__lte=today)
+        query = self.filter(habit=habit, date_to_do__lte=date)
         return {
             "total": query.count(),
             "total_done": query.filter(is_done=True).count(),
@@ -22,7 +21,7 @@ class InstanceManager(models.Manager):
         Returns both the total of habit instances a user should have
         been done yesterday and total of instances done.
         """
-        today = timezone.datetime.today() - timedelta(days=1)
+        yesterday = timezone.datetime.today() - timedelta(days=1)
         query = self.filter(user=user, date_to_do=yesterday)
         return {
             "total": query.count(),
