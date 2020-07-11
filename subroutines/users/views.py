@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework import viewsets
@@ -5,6 +7,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from dateutil.relativedelta import relativedelta
+
+from subroutines.stats.models import Stat
+from subroutines.stats.serializers import StatSerializer
 from subroutines.users.models import User
 from subroutines.users.serializers import (
     UserSerializer,
@@ -48,10 +54,13 @@ class UserViewSet(
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
-
+        stats = Stat.objects.filter(
+            user=user, date__gte=timezone.localdate() - relativedelta(months=3)
+        )
         data = {
             "user": UserSerializer(user).data,
             "token": str(token.access_token),
+            "stats": StatSerializer(stats, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
 

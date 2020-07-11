@@ -4,15 +4,15 @@
 
 ## About this project
 
-Sub-Routines give the users the possibility to easily track his habits. A user just must to create an account and start creating his habits given them a name, a frequency and a status of public or private if user want to share his progress with others users in the platform.
+Sub-Routines give the users the possibility to easily track his habits. A user just must to create an account and start creating his habits given them a name, a frequency and a status of private or public if user want to share his progress with other people in the application.
 
 Sub-Routines provides a way to remember to the user that should makes an activity according its frequency. Then with users inputs subroutines makes a report with user's progress that will be shown in a fancy graph.
 
 ## Features
 
 - Track your habits
+- Graph for user stats
 - Habits stats
-- Graph for habits stats
 
 ## Development process
 

@@ -19,9 +19,9 @@ class StatViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
         """
         Limit queryset to user logged in.
-        Just retrieve stats greater than or equal to a year before.
+        Just retrieve stats greater than or equal to a three months ago.
         """
         user = self.request.user
         return Stat.objects.filter(
-            user=user, date__gte=timezone.localdate() - relativedelta(year=1)
+            user=user, date__gte=timezone.localdate() - relativedelta(months=3)
         )
