@@ -15,6 +15,7 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     """User model serializer."""
+    biography = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = User
